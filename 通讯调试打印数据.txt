@@ -1,0 +1,69 @@
+Center:
+设置ID
+[13:06:38.708] a5 0 0 0 0 0 0 1 16 1 64 0 0 0 0 0 0 ff 4e 0 1 0 57 0 0 0 0 0 0 0 0 19 
+R
+EA
+T2
+[13:06:38.708] a5 0 0 0 0 0 0 1 16 1 64 0 0 0 0 0 0 ff 4e 0 1 0 57 0 0 0 0 0 0 0 0 19 
+R
+EA
+new_id recv
+[13:06:39.166] a5 0 0 3 ef 0 1 10 0 f cf ff ea b7 f7 5a 43 3b e3 49 ce e5 c2 6a 74 7f 2f df 1a 94 76 7e 
+ET2
+T2
+接收数据
+[13:08:16.164] a5 0 0 3 ef 0 3 1 16 1 58 0 0 0 0 0 0 0 0 0 1 ff a8 0 0 0 0 0 0 0 0 27 
+R
+EC
+[13:08:16.186] ED
+[13:08:17.208] ET1
+T2
+
+Node:
+[2020-08-02 12:57:06.382 R]Node[05] wakeup!
+[2020-08-02 12:57:06.786 R]x_sort_buf[0]=2 9c
+x_sort_buf[1]=2 9c
+x_sort_buf[2]=2 a0
+x_sort_buf[3]=2 a2
+x_sort_buf[4]=2 a2
+x_sort_buf[5]=2 a3
+x_sort_buf[6]=2 a4
+x_sort_buf[7]=2 a4
+x_sort_buf[8]=2 a6
+x_sort_buf[9]=2 a8
+x_sort_buf[10]=2 a8
+y_sort_buf[0]=ff 1b
+y_sort_buf[1]=ff 1f
+y_sort_buf[2]=ff 20
+y_sort_buf[3]=ff 20
+y_sort_buf[4]=ff 20
+y_sort_buf[5]=ff 21
+y_sort_buf[6]=ff 22
+y_sort_buf[7]=ff 23
+y_sort_buf[8]=ff 23
+y_sort_buf[9]=ff 24
+y_sort_buf[10]=ff 26
+z_sort_buf[0]=2 37
+z_sort_buf[1]=2 3b
+z_sort_buf[2]=2 3c
+z_sort_buf[3]=2 3c
+z_sort_buf[4]=2 3d
+z_sort_buf[5]=2 3d
+z_sort_buf[6]=2 3d
+z_sort_buf[7]=2 3e
+z_sort_buf[8]=2 3e
+z_sort_buf[9]=2 3e
+z_sort_buf[10]=2 40
+[2020-08-02 12:57:06.862 R]rad_yaw=1.221707,
+[2020-08-02 12:57:06.880 R]44.877380
+[2020-08-02 12:57:06.910 R]adc_value=2937 voltage=
+[2020-08-02 12:57:06.928 R]1.821284
+[2020-08-02 12:57:07.091 R]S1
+[2020-08-02 12:57:07.391 R]5a 0 0 3 ef 0 5 aa 0 3f 35 f5 bd cb 77 7b 53 ff 17 f3 57 de 7 fd fd 93 d7 cf fd df 76 3b 
+head:5a
+R11
+R1
+Sleep
+
+
+
