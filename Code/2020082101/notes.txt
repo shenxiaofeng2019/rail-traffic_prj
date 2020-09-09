@@ -1,0 +1,123 @@
+Center:
+Boot
+20200619
+1.MAX_DMA_BUF_SIZE 1460-->Air720 Recv_Buff
+   USART2_MAX_RECV_LEN 1024*3
+2.增加队列环形接受机制
+20200630
+1.修改启动时初始化流程，先HAL_Init、SystemClock_Config后再跳转，不然冷启动无法跳转至App
+20200716
+1.增加20s喂狗
+
+App
+20200529
+1.中心节点修改为收到数据命令后做id是否为零判断，不是零则发送待机命令；
+20200619
+1.App->Boot时关闭所有中断及外设
+2.添加喂狗20s
+20200628
+1.修改分节点id请求时间为2s，原来5s
+20200701
+1.解决W5500发送死机问题，直接返回下次继续发送
+void Send_ReqNodeID_Cmd(uint8_t *buf)
+{
+	uint8_t *node_id = buf;
+	
+	if( tim_xs_flag == 1){
+		char *warning = "please send me a new node id ^_^\n";
+		printf("EA\n");
+		while (!W5500_Send((uint8_t*)warning, strlen(warning))){
+			printf("EB\n");
+			HAL_Delay(100);
+			return;
+		}
+		tim_xs_flag = 0;
+	}
+20200706
+1.设置分节点center id时需要判断0和非0状态
+if(g_flash_params.center_id != 0)
+{
+	zeroflag = false;
+}
+else
+{
+	zeroflag = true;
+}
+20200803
+1.Z轴上报0
+
+Acquisition:
+20200610
+1.修改节点状态机流程，改为直接发送数据，不再发送初始化信息，这样只睡一次；
+原流程需要发送初始化信息睡一次，之后再发送数据再睡，当中睡了再启动发送消耗功耗较多；
+2.添加MPU6050
+20200629
+1.修改nodeid时做零与非零判断
+case NC_MODIFYNODEID:
+	if ( !Is_BytesZero(g_flash_params.total_id.node_id, NODEID_LEN) )
+	{
+		if (!Compare_Buf(header->total_id.node_id, g_flash_params.total_id.node_id, NODEID_LEN))
+			return;
+	}
+20200702
+1.修改RTC分频时钟参数为0x00000004，原来为0
+20200706
+1.按键清除center id & node id
+20200707
+1.电量上报分压不是0.5，实测是0.438
+20200708
+1.添加设置全部id命令，一次全部设置完成，Cmd_Handler函数中
+case NC_MODIFYTOTALID:
+	if (Is_BytesZero(&np_data->param.total_id[0], CENTERID_LEN))
+		return false;
+	memcpy(g_flash_params.total_id.center_id, &np_data->param.total_id[0], CENTERID_LEN);
+	if (!Is_BytesZero(g_flash_params.total_id.node_id, NODEID_LEN))
+	{
+		if (!Compare_Buf(&np_data->param.total_id[4], g_flash_params.total_id.node_id, NODEID_LEN))
+				return false;
+	}
+	if (Is_BytesZero(&np_data->param.total_id[4], NODEID_LEN))
+		return false;
+	memcpy(g_flash_params.total_id.node_id, &np_data->param.total_id[4], NODEID_LEN);
+	EEP_Write_Params();
+	g_mag_initial_flag = 1;	//initial mag data
+	ACProto_Pack_Header(&g_node_req.header, NC_MODIFYCENTERID);
+	ACProto_Pack_Header(&g_node_req.header, NC_MODIFYNODEID);
+	Si4438_Send((uint8_t *)&g_node_req.header,sizeof(g_node_req.header));			
+break;
+20200710
+1.Cmd_Handler修改为bool返回型
+如果中心节点发送的id与自身id不一致就会再次等待超时，原来是如果头、中心节点id相同就return ture退出5s超时等待，现在还需要node id也正确才
+退出超时等待否则继续等待接收直到5s超时
+2.在Main_StateMachine函数中，
+case NS_RUNNING_STAGE:
+	do {
+#ifdef USE_LSM303_SENSOR
+		LSM303_Process();
+#else
+		MPU6050_Process();
+#endif
+		if(Is_BytesZero(&g_flash_params.total_id.center_id[0], 6))
+		{
+			RunTimes = 0;
+		}
+		else
+		{
+			RunTimes++;
+			if(RunTimes == 3)
+			{
+				printf("Sleep due to runtimes!\n");
+				Enter_Standby_Rtc(600);
+			}
+		}
+		Send_NormalData();
+	}while(!Receive_And_Process());	
+//	Send_NormalData();
+//	Receive_And_Process();
+break;
+20200831
+1.LM303 XY冷或热复位后，变为初始值0
+
+
+
+
